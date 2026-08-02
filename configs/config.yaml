@@ -1,0 +1,16 @@
+camera:
+  device_index: 0      # Indeks webcam laptop (biasanya 0)
+  width: 640
+  height: 480
+
+thresholds:
+  slouch_angle_limit: 70.0   # Batas sudut hasil eksperimen Sabrina
+  consecutive_frames: 10     # Jumlah frame bungkuk sebelum notifikasi aktif
+  cooldown_secs: 7.0         # Jeda waktu (detik) antar notifikasi desktop
+
+logging:
+  level: "INFO"
+
+web:
+  host: "127.0.0.1"    # Localhost (hanya bisa diakses dari komputer sendiri)
+  port: 8000           # Port default FastAPI/Uvicorn

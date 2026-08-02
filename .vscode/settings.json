@@ -1,0 +1,9 @@
+{
+    "python.defaultInterpreterPath": "d:\\Project\\Sab Project\\research-asset\\ml-engineer\\stop-bungkuk\\.venv\\Scripts\\python.exe",
+    "python.analysis.extraPaths": [
+        "d:\\Project\\Sab Project\\research-asset\\ml-engineer\\stop-bungkuk"
+    ],
+    "python.autoComplete.extraPaths": [
+        "d:\\Project\\Sab Project\\research-asset\\ml-engineer\\stop-bungkuk"
+    ]
+}

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stop Bungkuk — Posture Monitor</title>
+    <meta name="description" content="Real-time posture monitoring using MediaPipe in your browser." />
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+
+<body>
+    <div id="app">
+
+        <!-- Header -->
+        <header id="header">
+            <h1>🪑 Stop Bungkuk</h1>
+            <p class="subtitle">Real-time Posture Monitor</p>
+        </header>
+
+        <!-- Main Content -->
+        <main id="main-content">
+
+            <!-- Camera Feed -->
+            <section id="camera-section">
+                <div id="camera-wrapper">
+                    <video id="webcam" autoplay playsinline></video>
+                    <canvas id="output-canvas"></canvas>
+                    <div id="camera-overlay-text">Starting camera...</div>
+                </div>
+            </section>
+
+            <!-- Dashboard -->
+            <section id="dashboard">
+
+                <!-- Status Card -->
+                <div id="status-card" class="card">
+                    <p class="card-label">Posture Status</p>
+                    <p id="posture-status" class="status-text good">Good ✓</p>
+                </div>
+
+                <!-- Angle Card -->
+                <div id="angle-card" class="card">
+                    <p class="card-label">Shoulder–Nose Angle</p>
+                    <p id="angle-value" class="metric">—°</p>
+                </div>
+
+                <!-- Threshold Card -->
+                <div id="threshold-card" class="card">
+                    <p class="card-label">
+                        Slouch Threshold: <span id="threshold-display">70</span>°
+                    </p>
+                    <input type="range" id="threshold-slider" min="40" max="120" value="70" step="1" />
+                </div>
+
+                <!-- Alert Counter Card -->
+                <div id="counter-card" class="card">
+                    <p class="card-label">Slouch Alerts Sent</p>
+                    <p id="alert-counter" class="metric">0</p>
+                </div>
+
+            </section>
+        </main>
+
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

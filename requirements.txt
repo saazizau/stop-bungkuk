@@ -1,0 +1,7 @@
+opencv-python>=4.8.0
+mediapipe==0.10.14
+pydantic>=2.0
+pyyaml>=6.0
+plyer>=2.1
+fastapi>=0.110.0
+uvicorn>=0.29.0

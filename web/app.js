@@ -34,15 +34,48 @@ let alertsChart = null;
 let lastNotificationTime = 0;
 const COOLDOWN_SECS = 7.0;
 
+function playAudioAlert() {
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(520, audioCtx.currentTime); // Clear note
+        gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime);       // Comfortable volume
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        oscillator.start();
+        
+        // Smooth volume fade-out
+        gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.25);
+        
+        setTimeout(() => {
+            oscillator.stop();
+            audioCtx.close();
+        }, 250);
+    } catch (e) {
+        console.warn("Failed to play audio alert:", e);
+    }
+}
+
 function sendBrowserNotification() {
     const now = Date.now();
     if (now - lastNotificationTime > COOLDOWN_SECS * 1000) {
+        // Play sound alert immediately
+        playAudioAlert();
+
         if (Notification.permission === "granted") {
-            new Notification("Peringatan Postur!", {
-                body: "Ayo tegakkan punggungmu, Sabrina!"
-            });
-            lastNotificationTime = now;
+            try {
+                new Notification("Peringatan Postur!", {
+                    body: "Ayo tegakkan punggungmu, Sabrina!"
+                });
+            } catch (e) {
+                console.warn("Notification error:", e);
+            }
         }
+        lastNotificationTime = now;
     }
 }
 

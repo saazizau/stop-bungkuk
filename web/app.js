@@ -34,26 +34,55 @@ let alertsChart = null;
 let lastNotificationTime = 0;
 const COOLDOWN_SECS = 7.0;
 
+// Shared AudioContext to bypass Chrome/Edge Autoplay Policies
+let sharedAudioCtx = null;
+
+function getAudioContext() {
+    if (!sharedAudioCtx) {
+        sharedAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (sharedAudioCtx.state === 'suspended') {
+        sharedAudioCtx.resume();
+    }
+    return sharedAudioCtx;
+}
+
+// Bind interaction events to resume/unlock the AudioContext
+['click', 'touchstart', 'mousedown', 'keydown'].forEach(event => {
+    document.addEventListener(event, () => {
+        try {
+            getAudioContext();
+        } catch (e) {
+            // silent catch
+        }
+    }, { once: true });
+});
+
 function playAudioAlert() {
     try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
+        const ctx = getAudioContext();
+        if (!ctx || ctx.state === 'suspended') {
+            console.warn("AudioContext is suspended. Click/interact with the page to enable sound.");
+            return;
+        }
+        
+        const oscillator = ctx.createOscillator();
+        const gainNode = ctx.createGain();
         
         oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(520, audioCtx.currentTime); // Clear note
-        gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime);       // Comfortable volume
+        oscillator.frequency.setValueAtTime(520, ctx.currentTime); // Clear note
+        gainNode.gain.setValueAtTime(0.08, ctx.currentTime);       // Comfortable volume
         
         oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
+        gainNode.connect(ctx.destination);
         oscillator.start();
         
         // Smooth volume fade-out
-        gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.25);
+        gainNode.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.25);
         
         setTimeout(() => {
             oscillator.stop();
-            audioCtx.close();
+            // Do not close the shared context, just release the oscillator
         }, 250);
     } catch (e) {
         console.warn("Failed to play audio alert:", e);

@@ -1,23 +1,24 @@
-/* ===== Google Font ===== */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+/* ===== Fonts ===== */
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* ===== CSS Variables / Design Tokens ===== */
+/* ===== Design Tokens (Minimalist / High Contrast) ===== */
 :root {
-    --bg-primary: #0a0b0f;
-    --bg-secondary: #12141a;
-    --card-bg: rgba(255, 255, 255, 0.04);
-    --card-border: rgba(255, 255, 255, 0.08);
-    --text-primary: #f0f0f5;
-    --text-muted: #6b7080;
-    --accent-good: #22c55e;
-    --accent-bad: #ef4444;
-    --accent-blue: #6366f1;
-    --glow-good: rgba(34, 197, 94, 0.25);
-    --glow-bad: rgba(239, 68, 68, 0.35);
-    --radius: 16px;
+    --bg-main: #09090b;          /* Zinc 950 */
+    --bg-card: #09090b;          /* Pure flat black */
+    --border-color: #27272a;     /* Zinc 800 */
+    --text-main: #fafafa;        /* Zinc 50 */
+    --text-muted: #71717a;       /* Zinc 500 */
+    
+    --accent-good: #22c55e;      /* Green 500 */
+    --accent-bad: #ef4444;       /* Red 500 */
+    --accent-blue: #3f3f46;      /* Zinc 700 */
+    
+    --font-sans: 'Inter', -apple-system, sans-serif;
+    --font-mono: 'Geist Mono', monospace;
+    --radius: 0px;               /* Flat, sharp edges */
 }
 
-/* ===== Reset & Base ===== */
+/* ===== Base Reset ===== */
 *,
 *::before,
 *::after {
@@ -27,60 +28,64 @@
 }
 
 body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
+    font-family: var(--font-sans);
+    background-color: var(--bg-main);
+    color: var(--text-main);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    letter-spacing: -0.01em;
 }
 
 /* ===== Header ===== */
 #header {
-    text-align: center;
-    padding: 2rem 1rem 1rem;
-    border-bottom: 1px solid var(--card-border);
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 1px solid var(--border-color);
 }
 
 #header h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    letter-spacing: -0.5px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
 }
 
 #header .subtitle {
     color: var(--text-muted);
-    font-size: 0.9rem;
-    margin-top: 0.25rem;
-    font-weight: 300;
-    letter-spacing: 0.5px;
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
     text-transform: uppercase;
 }
 
-/* ===== Main Layout ===== */
+/* ===== Layout ===== */
 #main-content {
-    display: flex;
-    flex: 1;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
     gap: 1.5rem;
-    padding: 1.5rem;
     max-width: 1200px;
     margin: 0 auto;
+    padding: 1.5rem;
     width: 100%;
+    flex: 1;
 }
 
 /* ===== Camera Section ===== */
 #camera-section {
-    flex: 1.2;
+    width: 100%;
 }
 
 #camera-wrapper {
     position: relative;
     width: 100%;
-    border-radius: var(--radius);
-    overflow: hidden;
-    background: var(--bg-secondary);
-    border: 1px solid var(--card-border);
     aspect-ratio: 4/3;
+    background: #000;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
 }
 
 #webcam,
@@ -93,11 +98,10 @@ body {
     object-fit: cover;
 }
 
+/* Mirror the webcam stream */
 #webcam {
     transform: scaleX(-1);
 }
-
-/* Mirror like a real mirror */
 #output-canvas {
     transform: scaleX(-1);
 }
@@ -108,43 +112,49 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     color: var(--text-muted);
-    font-size: 0.9rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     pointer-events: none;
-    transition: opacity 0.5s;
+    transition: opacity 0.3s;
 }
 
 /* ===== Dashboard ===== */
 #dashboard {
-    flex: 0.8;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
     gap: 1rem;
 }
 
-/* ===== Cards ===== */
+/* ===== Card Styling ===== */
 .card {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: var(--radius);
-    padding: 1.25rem 1.5rem;
-    backdrop-filter: blur(12px);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 1.25rem;
+    transition: border-color 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .card-label {
     color: var(--text-muted);
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
-    margin-bottom: 0.6rem;
+    letter-spacing: 0.05em;
+    font-family: var(--font-mono);
+    margin-bottom: 0.75rem;
 }
 
-/* ===== Status Text ===== */
+/* ===== Status Indicator ===== */
 .status-text {
-    font-size: 1.6rem;
-    font-weight: 700;
-    transition: color 0.4s ease;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
 }
 
 .status-text.good {
@@ -153,58 +163,66 @@ body {
 
 .status-text.bad {
     color: var(--accent-bad);
-    animation: pulse-bad 1.5s ease-in-out infinite;
 }
 
+/* Hard status highlights instead of bubbly glows */
 #status-card.good {
-    border-color: rgba(34, 197, 94, 0.3);
-    box-shadow: 0 0 24px var(--glow-good);
+    border-color: var(--accent-good);
 }
 
 #status-card.bad {
-    border-color: rgba(239, 68, 68, 0.4);
-    box-shadow: 0 0 28px var(--glow-bad);
+    border-color: var(--accent-bad);
 }
 
-/* ===== Metric Numbers ===== */
+/* ===== Metrics ===== */
 .metric {
-    font-size: 2.4rem;
+    font-size: 2.25rem;
     font-weight: 700;
-    color: var(--text-primary);
-    font-variant-numeric: tabular-nums;
-    letter-spacing: -1px;
+    font-family: var(--font-mono);
+    letter-spacing: -0.04em;
+    color: var(--text-main);
 }
 
-/* ===== Slider ===== */
+/* ===== Minimalist Input Slider ===== */
 #threshold-slider {
+    -webkit-appearance: none;
+    appearance: none;
     width: 100%;
+    background: var(--border-color);
+    height: 2px;
+    outline: none;
     margin-top: 0.5rem;
-    accent-color: var(--accent-blue);
+}
+
+#threshold-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    background: var(--text-main);
     cursor: pointer;
-    height: 4px;
+    border-radius: 0; /* Pure square thumb */
 }
 
-/* ===== Animations ===== */
-@keyframes pulse-bad {
-
-    0%,
-    100% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0.6;
-    }
+#threshold-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    background: var(--text-main);
+    cursor: pointer;
+    border: none;
+    border-radius: 0;
 }
 
-/* ===== Responsive ===== */
+/* ===== Responsive Grid ===== */
 @media (max-width: 768px) {
-    #main-content {
+    #header {
         flex-direction: column;
-        padding: 1rem;
+        align-items: flex-start;
+        gap: 0.5rem;
     }
-
-    #camera-wrapper {
-        aspect-ratio: 4/3;
+    
+    #main-content {
+        grid-template-columns: 1fr;
+        padding: 1rem;
     }
 }

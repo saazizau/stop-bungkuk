@@ -37,7 +37,7 @@ async function setupCamera() {
         });
     } catch (err) {
         console.error("Gagal mengakses webcam:", err);
-        cameraOverlay.textContent = "Webcam access denied ❌";
+        cameraOverlay.textContent = "Webcam access denied";
         throw err;
     }
 }
@@ -78,18 +78,18 @@ function updateUI(status, angle, isSlouching) {
     angleValue.textContent = `${angle.toFixed(1)}°`;
 
     if (status === "NO_POSE") {
-        postureStatus.textContent = 'No Pose 🔍';
+        postureStatus.textContent = 'No Pose';
         postureStatus.className = 'status-text';
         statusCard.className = 'card';
         return;
     }
 
     if (isSlouching) {
-        postureStatus.textContent = 'SLOUCHING ⚠️';
+        postureStatus.textContent = 'SLOUCHING';
         postureStatus.className = 'status-text bad';
         statusCard.className = 'card bad';
     } else {
-        postureStatus.textContent = 'Good ✓';
+        postureStatus.textContent = 'Good';
         postureStatus.className = 'status-text good';
         statusCard.className = 'card good';
     }

@@ -1,3 +1,13 @@
+---
+title: Stop Bungkuk
+emoji: 🪑
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # 🪑 Stop Bungkuk
 
 A real-time posture monitoring application using a webcam, MediaPipe, Python, and FastAPI.

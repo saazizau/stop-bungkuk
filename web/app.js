@@ -30,6 +30,22 @@ const chartLabels = [];
 const chartData = [];
 let alertsChart = null;
 
+// Notification State
+let lastNotificationTime = 0;
+const COOLDOWN_SECS = 7.0;
+
+function sendBrowserNotification() {
+    const now = Date.now();
+    if (now - lastNotificationTime > COOLDOWN_SECS * 1000) {
+        if (Notification.permission === "granted") {
+            new Notification("Peringatan Postur!", {
+                body: "Ayo tegakkan punggungmu, Sabrina!"
+            });
+            lastNotificationTime = now;
+        }
+    }
+}
+
 // Initialize labels and data with zeros for the last 5 minutes as a starting baseline
 const now = new Date();
 for (let i = 4; i >= 0; i--) {
@@ -251,6 +267,9 @@ async function captureAndAnalyze() {
                 alertsThisMinute++;
                 alertCounter.textContent = alertCount;
             }
+            if (data.is_slouching) {
+                sendBrowserNotification();
+            }
             lastStatus = data.status;
         }
     } catch (err) {
@@ -263,6 +282,12 @@ async function captureAndAnalyze() {
 // ===== Entry Point =====
 async function main() {
     initChart();
+    
+    // Request browser notification permission
+    if (window.Notification && Notification.permission !== "granted" && Notification.permission !== "denied") {
+        Notification.requestPermission();
+    }
+    
     await setupCamera();
     videoEl.play();
     setInterval(captureAndAnalyze, 150);

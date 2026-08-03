@@ -72,35 +72,22 @@
                     </div>
                 </div>
 
-                <!-- Angle Card -->
-                <div id="angle-card" class="card">
-                    <div class="card-left">
+                <!-- Angle & Threshold Card -->
+                <div id="angle-threshold-card" class="card">
+                    <div class="card-left w-full">
                         <div class="metric-icon">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                         </div>
-                        <div class="card-details">
-                            <p class="card-label">Shoulder–Nose Angle</p>
+                        <div class="card-details w-full">
                             <div class="metric-value-row">
-                                <p id="angle-value" class="metric">—°</p>
+                                <p class="card-label">Shoulder–Nose Angle</p>
                                 <span id="angle-badge" class="badge badge-ideal">Ideal</span>
                             </div>
-                            <p class="card-subtext">Ideal: 50° - 70°</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Slider Card -->
-                <div id="threshold-card" class="card">
-                    <div class="card-left">
-                        <div class="metric-icon">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="2" y1="14" x2="6" y2="14"/><line x1="10" y1="8" x2="14" y2="8"/><line x1="18" y1="16" x2="22" y2="16"/></svg>
-                        </div>
-                        <div class="card-details w-full">
-                            <p class="card-label">Slouch Threshold</p>
-                            <div class="metric-value-row">
-                                <p class="metric"><span id="threshold-display">70</span>°</p>
+                            <div class="metric-value-row align-baseline" style="display: flex; align-items: baseline; gap: 0.75rem;">
+                                <p id="angle-value" class="metric">—°</p>
+                                <p class="card-subtext" style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">Threshold: <span id="threshold-display">70</span>°</p>
                             </div>
-                            <div class="slider-container">
+                            <div class="slider-container" style="margin-top: 0.5rem;">
                                 <span class="slider-limit">40°</span>
                                 <input type="range" id="threshold-slider" min="40" max="120" value="70" step="1" />
                                 <span class="slider-limit">120°</span>
@@ -109,19 +96,30 @@
                     </div>
                 </div>
 
-                <!-- Alert Counter Card -->
-                <div id="counter-card" class="card">
-                    <div class="card-left">
+                <!-- Browser Alerts Control Card -->
+                <div id="notif-control-card" class="card">
+                    <div class="card-left w-full">
                         <div class="metric-icon">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
                         </div>
-                        <div class="card-details">
-                            <p class="card-label">Slouch Alerts Sent</p>
-                            <p id="alert-counter" class="metric">0</p>
-                            <p class="card-subtext">Hari ini</p>
+                        <div class="card-details w-full">
+                            <div class="metric-value-row">
+                                <p class="card-label">Browser Notification</p>
+                                <span id="notif-status-badge" class="badge badge-warning">Checking...</span>
+                            </div>
+                            <div class="name-input-container" style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; width: 100%;">
+                                <span class="card-label" style="font-size: 0.75rem; color: var(--text-muted); white-space: nowrap;">Panggilan</span>
+                                <input type="text" id="user-name-input" placeholder="Teman" class="name-text-input" value="Teman" style="flex: 1;" />
+                            </div>
+                            <div class="notif-action-buttons">
+                                <button id="btn-request-notif" class="notif-btn primary-btn">Minta Izin</button>
+                                <button id="btn-test-notif" class="notif-btn secondary-btn">Test Notif</button>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+
             </div>
         </main>
 

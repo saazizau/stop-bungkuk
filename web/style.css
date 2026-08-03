@@ -435,6 +435,77 @@ body {
     border: 1px solid var(--border-color);
 }
 
+.name-input-container {
+    margin-top: 0.5rem;
+    width: 100%;
+}
+
+.name-text-input {
+    width: 100%;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.8rem;
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.name-text-input:focus {
+    border-color: var(--accent-blue);
+    background-color: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.notif-action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.notif-btn {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.75rem;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.primary-btn {
+    background-color: var(--text-main);
+    color: var(--bg-main);
+}
+
+.primary-btn:hover:not(:disabled) {
+    background-color: #e4e4e7;
+}
+
+.primary-btn:disabled {
+    background-color: var(--bg-main);
+    color: var(--text-sub);
+    border-color: var(--border-color);
+    cursor: not-allowed;
+}
+
+.secondary-btn {
+    background-color: transparent;
+    color: var(--text-main);
+    border-color: var(--border-color);
+}
+
+.secondary-btn:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: var(--border-hover);
+}
+
 /* ===== Bottom Section (Full Width Chart) ===== */
 #bottom-section {
     width: 100%;

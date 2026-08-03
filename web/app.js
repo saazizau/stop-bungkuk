@@ -33,6 +33,7 @@ let alertsChart = null;
 // Notification State
 let lastNotificationTime = 0;
 const COOLDOWN_SECS = 7.0;
+let swRegistration = null;
 
 // Shared AudioContext to bypass Chrome/Edge Autoplay Policies
 let sharedAudioCtx = null;
@@ -66,28 +67,128 @@ function playAudioAlert() {
             return;
         }
         
-        const oscillator = ctx.createOscillator();
-        const gainNode = ctx.createGain();
-        
-        oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(520, ctx.currentTime); // Clear note
-        gainNode.gain.setValueAtTime(0.08, ctx.currentTime);       // Comfortable volume
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(ctx.destination);
-        oscillator.start();
-        
-        // Smooth volume fade-out
-        gainNode.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.25);
-        
-        setTimeout(() => {
-            oscillator.stop();
-            // Do not close the shared context, just release the oscillator
-        }, 250);
+        const playBeep = (time, frequency, duration, volume = 0.08) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            
+            osc.type = 'triangle'; // Richer sound than 'sine'
+            osc.frequency.setValueAtTime(frequency, time);
+            
+            gain.gain.setValueAtTime(volume, time);
+            gain.gain.setValueAtTime(volume, time + duration - 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.00001, time + duration);
+            
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            
+            osc.start(time);
+            osc.stop(time + duration);
+        };
+
+        const now = ctx.currentTime;
+        // Urgent/triggering pattern: 3 rapid high-pitched digital beeps
+        playBeep(now, 880, 0.08, 0.08);
+        playBeep(now + 0.12, 880, 0.08, 0.08);
+        playBeep(now + 0.24, 1100, 0.18, 0.06);
     } catch (e) {
         console.warn("Failed to play audio alert:", e);
     }
 }
+
+function updateNotificationUI() {
+    const badge = document.getElementById('notif-status-badge');
+    const desc = document.getElementById('notif-status-desc');
+    const reqBtn = document.getElementById('btn-request-notif');
+    
+    if (!window.Notification) {
+        badge.textContent = "Tidak Didukung";
+        badge.className = "badge badge-warning";
+        if (desc) desc.textContent = "Browser Anda tidak mendukung Notifikasi Desktop.";
+        reqBtn.disabled = true;
+        return;
+    }
+    
+    if (Notification.permission === "granted") {
+        badge.textContent = "Aktif";
+        badge.className = "badge badge-ideal";
+        if (desc) desc.textContent = "Notifikasi desktop aktif & suara aktif.";
+        reqBtn.textContent = "Izin Diberikan";
+        reqBtn.disabled = true;
+    } else if (Notification.permission === "denied") {
+        badge.textContent = "Diblokir";
+        badge.className = "badge badge-warning";
+        if (desc) desc.textContent = "Izin diblokir. Harap aktifkan lewat setelan browser.";
+        reqBtn.textContent = "Izin Diblokir";
+        reqBtn.disabled = true;
+    } else {
+        badge.textContent = "Butuh Akses";
+        badge.className = "badge badge-warning";
+        if (desc) desc.textContent = "Klik 'Minta Izin' untuk mengaktifkan notifikasi pop-up.";
+        reqBtn.textContent = "Minta Izin";
+        reqBtn.disabled = false;
+    }
+}
+
+// Bind manual notification requests
+document.getElementById('btn-request-notif').addEventListener('click', () => {
+    if (window.Notification) {
+        Notification.requestPermission().then(permission => {
+            updateNotificationUI();
+            if (permission === "granted") {
+                // Play sound to trigger/warm up AudioContext
+                playAudioAlert();
+            }
+        });
+    }
+});
+
+// Bind test notifications
+document.getElementById('btn-test-notif').addEventListener('click', () => {
+    // Play audio alert
+    playAudioAlert();
+    
+    // Get username
+    const nameInput = document.getElementById('user-name-input');
+    const userName = nameInput ? nameInput.value.trim() : "Teman";
+    const nameToShow = userName || "Teman";
+
+    // Show test desktop notification
+    if (window.Notification) {
+        const title = "Test Notifikasi!";
+        const options = {
+            body: `Halo ${nameToShow}! Notifikasi Stop Bungkuk berfungsi dengan baik!`,
+            tag: "slouch-test-alert",
+            renotify: true
+        };
+
+        if (Notification.permission === "granted") {
+            if (swRegistration) {
+                swRegistration.showNotification(title, options);
+            } else {
+                try {
+                    new Notification(title, options);
+                } catch (e) {
+                    console.warn("Notification error:", e);
+                }
+            }
+        } else if (Notification.permission === "default") {
+            Notification.requestPermission().then(permission => {
+                updateNotificationUI();
+                if (permission === "granted") {
+                    if (swRegistration) {
+                        swRegistration.showNotification(title, options);
+                    } else {
+                        new Notification(title, options);
+                    }
+                }
+            });
+        } else {
+            alert("Suara telah diputar! Notifikasi desktop diblokir di browser Anda. Harap aktifkan di pengaturan browser Anda jika ingin menerima notifikasi pop-up.");
+        }
+    } else {
+        alert("Suara telah diputar! Browser Anda tidak mendukung notifikasi desktop.");
+    }
+});
 
 function sendBrowserNotification() {
     const now = Date.now();
@@ -96,17 +197,31 @@ function sendBrowserNotification() {
         playAudioAlert();
 
         if (Notification.permission === "granted") {
-            try {
-                new Notification("Peringatan Postur!", {
-                    body: "Ayo tegakkan punggungmu, Sabrina!"
-                });
-            } catch (e) {
-                console.warn("Notification error:", e);
+            const nameInput = document.getElementById('user-name-input');
+            const userName = nameInput ? nameInput.value.trim() : "Teman";
+            const nameToShow = userName || "Teman";
+
+            const title = "Peringatan Postur!";
+            const options = {
+                body: `Ayo tegakkan punggungmu, ${nameToShow}!`,
+                tag: "slouch-alert",
+                renotify: true
+            };
+
+            if (swRegistration) {
+                swRegistration.showNotification(title, options);
+            } else {
+                try {
+                    new Notification(title, options);
+                } catch (e) {
+                    console.warn("Notification error:", e);
+                }
             }
         }
         lastNotificationTime = now;
     }
 }
+
 
 // Initialize labels and data with zeros for the last 5 minutes as a starting baseline
 const now = new Date();
@@ -327,7 +442,7 @@ async function captureAndAnalyze() {
             if (data.is_slouching && lastStatus !== "SLOUCHING") {
                 alertCount++;
                 alertsThisMinute++;
-                alertCounter.textContent = alertCount;
+                if (alertCounter) alertCounter.textContent = alertCount;
             }
             if (data.is_slouching) {
                 sendBrowserNotification();
@@ -345,9 +460,26 @@ async function captureAndAnalyze() {
 async function main() {
     initChart();
     
-    // Request browser notification permission
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+            .then(reg => {
+                console.log('Service Worker registered with scope:', reg.scope);
+                swRegistration = reg;
+            })
+            .catch(err => {
+                console.error('Service Worker registration failed:', err);
+            });
+    }
+
+    // Update permission status UI at startup
+    updateNotificationUI();
+    
+    // Request browser notification permission (will update UI when resolved or on interaction)
     if (window.Notification && Notification.permission !== "granted" && Notification.permission !== "denied") {
-        Notification.requestPermission();
+        Notification.requestPermission().then(() => {
+            updateNotificationUI();
+        });
     }
     
     await setupCamera();

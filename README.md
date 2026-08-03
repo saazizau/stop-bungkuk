@@ -1,10 +1,9 @@
 ---
 title: Stop Bungkuk
-emoji: 🪑
 colorFrom: blue
 colorTo: indigo
 sdk: docker
-app_port: 7860
+app_port: 8000
 pinned: false
 ---
 
@@ -44,6 +43,7 @@ Using MediaPipe Pose, it computes the angle at the Nose vertex. If this angle ex
 ```
 stop-bungkuk/
 ├── app.py                  # FastAPI server & endpoints (/api/analyze)
+├── caption.md              # LinkedIn post caption draft
 ├── configs/
 │   └── config.yaml         # Centralized configuration file
 ├── src/

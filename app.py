@@ -38,6 +38,11 @@ class FramePayload(BaseModel):
 def serve_index() -> FileResponse:
     return FileResponse("web/index.html")
 
+# --- Endpoint: Service Worker ---
+@app.get("/sw.js")
+def serve_sw() -> FileResponse:
+    return FileResponse("web/sw.js")
+
 # --- Endpoint: Analisis frame dari browser (Server-side Inference) ---
 @app.post("/api/analyze")
 def analyze_frame(payload: FramePayload) -> dict:
